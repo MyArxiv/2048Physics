@@ -196,6 +196,28 @@ GameManager.prototype.move = function (direction) {
                 self.moveTile(tile, positions.farthest)
             }
         }
+        // 强子 与 轻子 合成 原子核
+        else if (tile.value == ID_LEPTON || tile.value == ID_HADRON) {
+            if (next && (next.value + tile.value == ID_HADRON) && !next.mergedFrom) {
+                // We need to save tile since it will get removed
+                undo.tiles.push(tile.save(positions.next));
+                var merged = new Tile(positions.next, ID_NUCLEI);
+                merged.mergedFrom = [tile, next];
+
+                self.grid.insertTile(merged);
+                self.grid.removeTile(tile);
+
+                // Converge the two tiles' positions
+                tile.updatePosition(positions.next);
+
+                // Update the score
+                self.score += merged.value;
+            } else {
+                // Save backup information
+                undo.tiles.push(tile.save(positions.farthest));
+                self.moveTile(tile, positions.farthest);
+            }
+        }
         // Only one merger per row traversal?
         else if (next && next.value === tile.value && !next.mergedFrom) {
             // We need to save tile since it will get removed
