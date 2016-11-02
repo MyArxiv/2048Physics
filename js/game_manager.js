@@ -3,21 +3,23 @@ var ID_LEPTON   = 0; // 轻子
 var ID_QUARK    = 2; // 夸克
 var ID_HADRON   = 4; // 强子
 var ID_NUCLEI   = 8; // 原子核
+var ID_ATOM     = 16;// 原子
+var MAX_COUNTER = 3;
 
 function GameManager(size, InputManager, Actuator, ScoreManager) {
-  this.size         = size; // Size of the grid
-  this.inputManager = new InputManager;
-  this.scoreManager = new ScoreManager;
-  this.actuator     = new Actuator;
+    this.size         = size; // Size of the grid
+    this.inputManager = new InputManager;
+    this.scoreManager = new ScoreManager;
+    this.actuator     = new Actuator;
 
-  this.startTiles   = 2;
+    this.startTiles   = 2;
 
-  this.inputManager.on("move", this.move.bind(this));
-  this.inputManager.on("restart", this.restart.bind(this));
-  this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+    this.inputManager.on("move", this.move.bind(this));
+    this.inputManager.on("restart", this.restart.bind(this));
+    this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
-  this.undoStack = [];
-  this.setup();
+    this.undoStack = [];
+    this.setup();
 }
 
 // Restart the game
@@ -60,24 +62,40 @@ GameManager.prototype.setup = function () {
 
 // Set up the initial tiles to start the game with
 GameManager.prototype.addStartTiles = function () {
-  for (var i = 0; i < this.startTiles; i++) {
-    this.addRandomTile();
-  }
+    for (var i = 0; i < this.startTiles; i++) {
+        // reduce difficulty
+        var tile = new Tile(this.grid.randomAvailableCell(), ID_QUARK);
+        this.grid.insertTile(tile);
+    }
+};
+
+// Count the number of tiles with its value equals to 'value'
+GameManager.prototype.countTile = function (value) {
+    var count = 0;
+    this.grid.eachCell(function (x, y, tile) {
+        if (tile && tile.value == value) {
+            ++count;
+        }
+    });
+    return count;
 };
 
 // Adds a tile in a random position
 GameManager.prototype.addRandomTile = function () {
-  if (this.grid.cellsAvailable()) {
-    Math.seedrandom(this.seed);
-    for (var i=0; i<this.score; i++) {
-      Math.random();
-    }
-    var random = Math.random();
-    var value = random < 0.9 ? (random < 0.45 ? 2 : 0) : 4;
-    var tile = new Tile(this.grid.randomAvailableCell(), value);
+    if (this.grid.cellsAvailable()) {
+        Math.seedrandom(this.seed);
+        for (var i=0; i<this.score; i++) {
+            Math.random();
+        }
+        var random = Math.random();
+        var countNuclei = this.countTile(ID_NUCLEI);
+        var countLepton = this.countTile(ID_LEPTON);
+        var value = random < 0.9 ? (random < 0.9 * ((countNuclei - countLepton > 0) ? 1 : 0) ? 0 : 2) : 4;
+        // prevent the same continuous result
+        var tile = new Tile(this.grid.randomAvailableCell(), value);
 
-    this.grid.insertTile(tile);
-  }
+        this.grid.insertTile(tile);
+    }
 };
 
 // Sends the updated grid to the actuator
@@ -196,12 +214,12 @@ GameManager.prototype.move = function (direction) {
                 self.moveTile(tile, positions.farthest)
             }
         }
-        // 强子 与 轻子 合成 原子核
-        else if (tile.value == ID_LEPTON || tile.value == ID_HADRON) {
-            if (next && (next.value + tile.value == ID_HADRON) && !next.mergedFrom) {
+        // 原子核 与 轻子 合成 原子
+        else if (tile.value == ID_LEPTON || tile.value == ID_NUCLEI) {
+            if (next && (next.value + tile.value == ID_NUCLEI) && !next.mergedFrom) {
                 // We need to save tile since it will get removed
                 undo.tiles.push(tile.save(positions.next));
-                var merged = new Tile(positions.next, ID_NUCLEI);
+                var merged = new Tile(positions.next, ID_ATOM);
                 merged.mergedFrom = [tile, next];
 
                 self.grid.insertTile(merged);
