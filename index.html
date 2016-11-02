@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>2048 Physics</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="meta/apple-touch-icon.png">
+  <link rel="stylesheet" href="style/main.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/css/global.css">
+  
+  <script src="/js/fold.js"></script>
+</head>
+
+<body>
+    <div id="body">
+        <div class="container">
+            <div class="heading">
+                <h1 class="title" style="color:#112851;font-size:2em;">2048 Physics</h1>
+                <div class="scores-container">
+                <div class="score-container">0</div>
+                <div class="best-container">0</div>
+            </div>
+        </div>
+
+        <br />
+        
+        <p class="game-intro">从超弦到超膜！</p>
+        <br />
+        
+        <p>
+            按 <strong>空格</strong> 键可以开始新游戏！
+            <br />
+            按 <strong>Z</strong> 键可以撤销任意步！
+        </p>
+        <br />
+
+        <form>
+            新产生的超弦振动模式为：
+            <input type="radio" name="string" value="quark" checked>夸克</input>
+            <input type="radio" name="string" value="lepton" disabled>轻子</input>
+        </form>
+
+        <div class="game-container">
+          <div class="game-message">
+            <p></p>
+            <div class="lower">
+            <a class="keep-playing-button">继续玩到超膜！</a>
+              <a class="retry-button">再试一次</a>
+              <div class="score-sharing"></div>
+            </div>
+          </div>
+
+          <!-- Arena -->
+          <div class="grid-container">
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+              <div class="grid-cell"></div>
+            </div>
+          </div>
+
+          <div class="tile-container">
+          </div>
+        </div>
+
+        <p class="game-explanation">
+            <strong class="important">玩法：</strong>使用<strong>方向键</strong>移动方块，相同级别的方块可以合成下一级方块
+            <hr />
+            2048 物理专业版
+            <ol>
+                <li>超弦（夸克或轻子）</li>
+                <li>核子</li>
+                <li>原子核</li>
+                <li>原子</li>
+                <li>分子</li>
+                <li>细胞</li>
+                <li>生物</li>
+                <li>生物圈</li>
+                <li>地月系</li>
+                <li>太阳系</li>
+                <li>银河系</li>
+                <li>本星系（群）</li>
+                <li>宇宙</li>
+                <li>超膜</li>
+            </ol>
+        </p>
+        <hr />
+        <p class="game-explanation">
+            本游戏的进行有特殊的要求：
+            <br />
+            <ol>
+                <li>玩家可以选择新生成的超弦的振动模式为夸克还是轻子</li>
+                <li>三个夸克才能合成一个核子</li>
+                <li>原子核和轻子才能合成原子</li>
+            </ol>
+        </p>
+        <hr />
+        <p>
+            This is a fork from <br />
+            <a href="https://github.com/aenon/aenon.github.io">https://github.com/aenon/aenon.github.io</a>,<br />
+            which created by <a href="https://github.com/aenon" target="_blank">aenon</a>.
+            <br /><br />
+            Original game by <a href="http://gabrielecirulli.com/" target="_blank">Gabriele Cirulli</a>.
+            <br />
+            Based on <a href="https://itunes.apple.com/us/app/1024%21/id823499224" target="_blank">1024 by Veewo Studio</a>
+            <br />
+            and conceptually similar to <a href="http://asherv.com/threes/" target="_blank">Threes by Asher Vollmer</a>.
+            <br /><br />
+            Undo-mod by <a href="http://quaxio.com/">Alok Menghrajani</a>, <a href="https://github.com/alokmenghrajani/2048">source</a>.
+        </p>
+            
+        <hr />
+
+        <div id="copyright">
+            <p>
+                本游戏由天真可爱的<a href="https://github.com/LePtC/">@LePtc</a> 策划、设计，
+                <br />
+                以及由混沌邪恶<a href="https://github.com/donizyo/">@donizyo</a> 实现~
+            </p>
+        </div>
+      </div>
+
+      <script src="js/animframe_polyfill.js"></script>
+      <script src="js/keyboard_input_manager.js"></script>
+      <script src="js/html_actuator.js"></script>
+      <script src="js/grid.js"></script>
+      <script src="js/tile.js"></script>
+      <script src="js/local_score_manager.js"></script>
+      <script src="js/game_manager.js"></script>
+      <script src="js/application.js"></script>
+      <script src="js/seedrandom.js"></script>
+      <script src="js/debug.js"></script>
+
+    </div>
+    
+    </body>
+</html>
